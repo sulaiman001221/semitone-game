@@ -2,12 +2,16 @@
   "name": "sulaiman-ndlovu-199-semitone-difference-basic-algorithm-javascript",
   "version": "1.0.0",
   "description": "semitone difference - basic algorithm (199) For raw project instructions see: http://syllabus.africacode.net/projects/semitone-challenge/basic-algorithm/",
-  "main": "index.js",
+  "main": "../src/jam_buddy",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Sulaiman Ndlovu",
+    "email": "sulaiman.ndlovu@umuzi.org",
+    "github": "sulaiman001221"
+  },
   "license": "ISC",
   "devDependencies": {
     "jasmine": "^5.1.0"

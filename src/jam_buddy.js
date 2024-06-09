@@ -1,3 +1,5 @@
+const { errorMassage } = require("./helper_object");
+
 class JamBuddy {
   constructor() {
     this.notes = [
@@ -23,9 +25,7 @@ class JamBuddy {
       !this.isValidNote(notes[0]) ||
       !this.isValidNote(notes[1])
     ) {
-      throw new Error(
-        "Invalid notes provided. Notes should be one of A, A#, B, C, C#, D, D#, E, F, F#, G, G#."
-      );
+      throw new Error(errorMassage.invalidNotes);
     }
     this.currentNotes = notes;
   }
@@ -45,7 +45,7 @@ class JamBuddy {
 
   checkAnswer(distance) {
     if (this.currentNotes.length !== 2) {
-      throw new Error("Current notes not set.");
+      throw new Error(errorMassage.notesNotSet);
     }
     const index1 = this.notes.indexOf(this.currentNotes[0]);
     const index2 = this.notes.indexOf(this.currentNotes[1]);
@@ -62,3 +62,5 @@ class JamBuddy {
     return this.notes.includes(note);
   }
 }
+
+module.exports = { JamBuddy };
