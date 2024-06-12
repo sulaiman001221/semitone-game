@@ -19,13 +19,21 @@ class JamBuddy {
     this.currentNotes = [];
   }
 
+  isValidNote(note) {
+    return this.notes.includes(note);
+  }
+
   setCurrentNotes(notes) {
-    if (
-      notes.length !== 2 ||
-      !this.isValidNote(notes[0]) ||
-      !this.isValidNote(notes[1])
-    ) {
+    if (notes.length !== 2) {
+      throw new Error(errorMassage.invalidLength);
+    }
+
+    if (!this.isValidNote(notes[0]) || !this.isValidNote(notes[1])) {
       throw new Error(errorMassage.invalidNotes);
+    }
+
+    if (notes[0] === notes[1]) {
+      throw new Error(errorMassage.similarNotes);
     }
     this.currentNotes = notes;
   }
@@ -56,10 +64,6 @@ class JamBuddy {
     return (
       distance === clockwiseDistance || distance === counterClockwiseDistance
     );
-  }
-
-  isValidNote(note) {
-    return this.notes.includes(note);
   }
 }
 

@@ -23,7 +23,19 @@ describe("JamBuddy", () => {
     it("should throw an error if only one note is provided", () => {
       expect(() => {
         jamBuddy.setCurrentNotes(["C"]);
-      }).toThrowError(errorMassage.invalidNotes);
+      }).toThrowError(errorMassage.invalidLength);
+    });
+
+    it("should throw an error if more two notes are provided", () => {
+      expect(() => {
+        jamBuddy.setCurrentNotes(["C", "D", "B"]);
+      }).toThrowError(errorMassage.invalidLength);
+    });
+
+    it("should throw an error if the provided notes are similar", () => {
+      expect(() => {
+        jamBuddy.setCurrentNotes(["C", "C"]);
+      }).toThrowError(errorMassage.similarNotes);
     });
   });
 
@@ -61,7 +73,7 @@ describe("JamBuddy", () => {
 
     it("should return false if the distance is incorrect", () => {
       jamBuddy.setCurrentNotes(["C", "D"]);
-      const incorrectDistance = 3; 
+      const incorrectDistance = 3;
       expect(jamBuddy.checkAnswer(incorrectDistance)).toBeFalsy();
     });
 

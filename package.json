@@ -2,7 +2,7 @@
   "name": "sulaiman-ndlovu-199-semitone-difference-basic-algorithm-javascript",
   "version": "1.0.0",
   "description": "semitone difference - basic algorithm (199) For raw project instructions see: http://syllabus.africacode.net/projects/semitone-challenge/basic-algorithm/",
-  "main": "../src/jam_buddy",
+  "main": "/src/jam_buddy.js",
   "scripts": {
     "test": "jasmine"
   },
