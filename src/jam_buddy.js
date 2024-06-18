@@ -77,7 +77,4 @@ class JamBuddy {
   }
 }
 
-// let jam = new JamBuddy()
-// jam.setCurrentNotes(["a", "a#"])
-// console.log(jam.getCurrentNotes())
 module.exports = { JamBuddy };
