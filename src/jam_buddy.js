@@ -27,6 +27,14 @@ class JamBuddy {
   }
 
   setCurrentNotes(notes) {
+    for (let i = 0; i < notes.length; i++) {
+      if (Array.isArray(notes)) {
+        if (typeof notes[i] === "string") {
+          notes[i] = notes[i].toUpperCase();
+        }
+      }
+    }
+
     switch (true) {
       case !isArray(notes):
         throw new Error(errorMessage.invalidArray);

@@ -9,6 +9,11 @@ describe("JamBuddy Class", () => {
   });
 
   describe("setCurrentNotes method", () => {
+    it("should convert lower case notes to upper case", () => {
+      jamBuddy.setCurrentNotes(["a", "a#"]);
+      expect(jamBuddy.getCurrentNotes()).toEqual(["A", "A#"]);
+    });
+    
     it("should set the current notes if valid notes are provided", () => {
       jamBuddy.setCurrentNotes(["C", "D"]);
       expect(jamBuddy.getCurrentNotes()).toEqual(["C", "D"]);
