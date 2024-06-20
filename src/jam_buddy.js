@@ -1,11 +1,5 @@
 const { errorMessage } = require("./helper_object");
-const {
-  isCorrectLength,
-  isString,
-  isArray,
-  areValidNotes,
-  areSimilarNotes,
-} = require("./helper_functions");
+const { validateNotes } = require("./helper_functions");
 
 class JamBuddy {
   constructor() {
@@ -34,21 +28,8 @@ class JamBuddy {
         }
       }
     }
-
-    switch (true) {
-      case !isArray(notes):
-        throw new Error(errorMessage.invalidArray);
-      case !isCorrectLength(notes):
-        throw new Error(errorMessage.invalidLength);
-      case !isString(notes):
-        throw new Error(errorMessage.invalidDataType);
-      case !areValidNotes(notes, this.notes):
-        throw new Error(errorMessage.invalidNotes);
-      case areSimilarNotes(notes):
-        throw new Error(errorMessage.similarNotes);
-      default:
-        this.currentNotes = notes;
-    }
+    validateNotes(notes, this.notes);
+    this.currentNotes = notes;
   }
 
   getCurrentNotes() {

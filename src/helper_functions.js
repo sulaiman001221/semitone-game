@@ -1,3 +1,5 @@
+const { errorMessage } = require("./helper_object");
+
 function isCorrectLength(notes) {
   return notes.length === 2;
 }
@@ -22,10 +24,19 @@ function areSimilarNotes(notes) {
   return notes[0] === notes[1];
 }
 
-module.exports = {
-  isCorrectLength,
-  isString,
-  isArray,
-  areValidNotes,
-  areSimilarNotes,
-};
+function validateNotes(notes, validNotes) {
+  switch (true) {
+    case !isArray(notes):
+      throw new Error(errorMessage.invalidArray);
+    case !isCorrectLength(notes):
+      throw new Error(errorMessage.invalidLength);
+    case !isString(notes):
+      throw new Error(errorMessage.invalidDataType);
+    case !areValidNotes(notes, validNotes):
+      throw new Error(errorMessage.invalidNotes);
+    case areSimilarNotes(notes):
+      throw new Error(errorMessage.similarNotes);
+  }
+}
+
+module.exports = { validateNotes };
