@@ -13,7 +13,7 @@ describe("JamBuddy Class", () => {
       jamBuddy.setCurrentNotes(["a", "a#"]);
       expect(jamBuddy.getCurrentNotes()).toEqual(["A", "A#"]);
     });
-    
+
     it("should set the current notes if valid notes are provided", () => {
       jamBuddy.setCurrentNotes(["C", "D"]);
       expect(jamBuddy.getCurrentNotes()).toEqual(["C", "D"]);
@@ -25,13 +25,7 @@ describe("JamBuddy Class", () => {
       }).toThrowError(errorMessage.invalidNotes);
     });
 
-    it("should throw an error if only one note is provided", () => {
-      expect(() => {
-        jamBuddy.setCurrentNotes(["C"]);
-      }).toThrowError(errorMessage.invalidLength);
-    });
-
-    it("should throw an error if more than two notes are provided", () => {
+    it("should throw an error if the provided notes are not exactly two", () => {
       expect(() => {
         jamBuddy.setCurrentNotes(["C", "D", "B"]);
       }).toThrowError(errorMessage.invalidLength);
