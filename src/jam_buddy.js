@@ -22,13 +22,12 @@ function validateNotes(notes, validNotes) {
     if (typeof notes[i] !== "string") {
       throw new Error(errorMessage.invalidDataType);
     }
-  }
-  for (let i = 0; i < notes.length; i++) {
-    if (!validNotes.includes(notes[i].toUpperCase())) {
+    if (!validNotes.includes(notes[i])) {
       throw new Error(errorMessage.invalidNotes);
     }
   }
-  if (notes[0].toUpperCase() === notes[1].toUpperCase()) {
+
+  if (notes[0] === notes[1]) {
     throw new Error(errorMessage.similarNotes);
   }
 }
