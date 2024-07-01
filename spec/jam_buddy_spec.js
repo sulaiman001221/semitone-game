@@ -1,5 +1,4 @@
-const { errorMessage } = require("../src/helper_object");
-const { JamBuddy } = require("../src/jam_buddy");
+const { JamBuddy, errorMessage } = require("../src/jam_buddy");
 
 describe("JamBuddy Class", () => {
   let jamBuddy;
