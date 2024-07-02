@@ -1,5 +1,40 @@
-const { errorMessage } = require("./helper_object");
-const { validateNotes } = require("./helper_functions");
+const errorMessage = {
+  invalidNotes:
+    "Invalid notes provided. Notes should be one of A, A#, B, C, C#, D, D#, E, F, F#, G, G#.",
+  notesNotSet:
+    "Current notes not set, you should set two notes before checking the answer",
+  invalidDataType: "All the provided notes should be strings",
+  invalidArray: "Notes should be provided as an array",
+  similarNotes: "Notes should not be similar",
+  invalidLength: "You should provide exactly two notes",
+};
+
+const VALID_NOTE_COUNT = 2;
+
+function validateNotes(notes, validNotes) {
+  if (!Array.isArray(notes)) {
+    throw new Error(errorMessage.invalidArray);
+  }
+  if (notes.length !== VALID_NOTE_COUNT) {
+    throw new Error(errorMessage.invalidLength);
+  }
+  for (let i = 0; i < notes.length; i++) {
+    if (typeof notes[i] !== "string") {
+      throw new Error(errorMessage.invalidDataType);
+    }
+    if (!validNotes.includes(notes[i])) {
+      throw new Error(errorMessage.invalidNotes);
+    }
+  }
+
+  if (notes[0] === notes[1]) {
+    throw new Error(errorMessage.similarNotes);
+  }
+}
+
+function getRandomNote(notes) {
+  return notes[Math.floor(Math.random() * notes.length)];
+}
 
 class JamBuddy {
   constructor() {
@@ -21,11 +56,12 @@ class JamBuddy {
   }
 
   setCurrentNotes(notes) {
+    if (!Array.isArray(notes)) {
+      throw new Error(errorMessage.invalidArray);
+    }
     for (let i = 0; i < notes.length; i++) {
-      if (Array.isArray(notes)) {
-        if (typeof notes[i] === "string") {
-          notes[i] = notes[i].toUpperCase();
-        }
+      if (typeof notes[i] === "string") {
+        notes[i] = notes[i].toUpperCase();
       }
     }
     validateNotes(notes, this.notes);
@@ -37,22 +73,20 @@ class JamBuddy {
   }
 
   randomizeCurrentNotes() {
-    let note1 = this.notes[Math.floor(Math.random() * this.notes.length)];
-    let note2 = this.notes[Math.floor(Math.random() * this.notes.length)];
+    let note1 = getRandomNote(this.notes);
+    let note2 = getRandomNote(this.notes);
     while (note1 === note2) {
-      note2 = this.notes[Math.floor(Math.random() * this.notes.length)];
+      note2 = getRandomNote(this.notes);
     }
     this.currentNotes = [note1, note2];
   }
 
   checkAnswer(distance) {
-    if (this.currentNotes.length !== 2) {
+    if (this.currentNotes.length !== VALID_NOTE_COUNT) {
       throw new Error(errorMessage.notesNotSet);
     }
     const indexOfFirstNote = this.notes.indexOf(this.currentNotes[0]);
-    const noteCircle = `${this.notes.slice(
-      indexOfFirstNote
-    )},${this.notes.slice(0)}`.split(",");
+    const noteCircle = [...this.notes.slice(indexOfFirstNote), ...this.notes];
 
     const currentIndex = noteCircle.indexOf(this.currentNotes[0]);
     const targetIndex = noteCircle.indexOf(this.currentNotes[1]);
@@ -66,4 +100,4 @@ class JamBuddy {
   }
 }
 
-module.exports = { JamBuddy };
+module.exports = { JamBuddy, errorMessage };
