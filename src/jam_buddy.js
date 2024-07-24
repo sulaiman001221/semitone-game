@@ -100,4 +100,43 @@ class JamBuddy {
   }
 }
 
+const jamBuddy = new JamBuddy();
+const currentNotesElement = document.getElementById("currentNotes");
+const messageElement = document.getElementById("message");
+
+function updateCurrentNotesDisplay() {
+  const notes = jamBuddy.getCurrentNotes();
+  currentNotesElement.textContent = notes.length ? notes.join(" and ") : "--";
+}
+
+document
+  .getElementById("randomizeNotesButton")
+  .addEventListener("click", () => {
+    jamBuddy.randomizeCurrentNotes();
+    updateCurrentNotesDisplay();
+    messageElement.textContent = "";
+  });
+
+document.getElementById("checkAnswerButton").addEventListener("click", () => {
+  const answerInput = document.getElementById("answerInput");
+  const answer = parseInt(answerInput.value, 10);
+  if (isNaN(answer)) {
+    messageElement.textContent = "Please enter a valid number.";
+    return;
+  }
+
+  try {
+    const isCorrect = jamBuddy.checkAnswer(answer);
+    messageElement.textContent = isCorrect
+      ? "Correct! Well done!"
+      : "Incorrect. Try again.";
+  } catch (error) {
+    messageElement.textContent = error.message;
+  }
+});
+
+// Initialize the game with random notes
+jamBuddy.randomizeCurrentNotes();
+updateCurrentNotesDisplay();
+
 module.exports = { JamBuddy, errorMessage };
