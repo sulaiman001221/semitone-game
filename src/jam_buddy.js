@@ -101,12 +101,14 @@ class JamBuddy {
 }
 
 const jamBuddy = new JamBuddy();
-const currentNotesElement = document.getElementById("currentNotes");
+const note1Element = document.getElementById("note1");
+const note2Element = document.getElementById("note2");
 const messageElement = document.getElementById("message");
 
 function updateCurrentNotesDisplay() {
   const notes = jamBuddy.getCurrentNotes();
-  currentNotesElement.textContent = notes.length ? notes.join(" and ") : "--";
+  note1Element.value = notes.length ? notes[0] : "";
+  note2Element.value = notes.length ? notes[1] : "";
 }
 
 document
