@@ -100,45 +100,6 @@ class JamBuddy {
   }
 }
 
-const jamBuddy = new JamBuddy();
-const note1Element = document.getElementById("note1");
-const note2Element = document.getElementById("note2");
-const messageElement = document.getElementById("message");
-
-function updateCurrentNotesDisplay() {
-  const notes = jamBuddy.getCurrentNotes();
-  note1Element.value = notes.length ? notes[0] : "";
-  note2Element.value = notes.length ? notes[1] : "";
-}
-
-document
-  .getElementById("randomizeNotesButton")
-  .addEventListener("click", () => {
-    jamBuddy.randomizeCurrentNotes();
-    updateCurrentNotesDisplay();
-    messageElement.textContent = "";
-  });
-
-document.getElementById("checkAnswerButton").addEventListener("click", () => {
-  const answerInput = document.getElementById("answerInput");
-  const answer = parseInt(answerInput.value, 10);
-  if (isNaN(answer)) {
-    messageElement.textContent = "Please enter a valid number.";
-    return;
-  }
-
-  try {
-    const isCorrect = jamBuddy.checkAnswer(answer);
-    messageElement.textContent = isCorrect
-      ? "Correct! Well done!"
-      : "Incorrect. Try again.";
-  } catch (error) {
-    messageElement.textContent = error.message;
-  }
-});
-
-// Initialize the game with random notes
-jamBuddy.randomizeCurrentNotes();
-updateCurrentNotesDisplay();
-
-module.exports = { JamBuddy, errorMessage };
+typeof window !== "undefined"
+  ? (window.JamBuddy = JamBuddy)
+  : (module.exports = { JamBuddy, errorMessage });

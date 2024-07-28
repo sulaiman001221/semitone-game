@@ -23,16 +23,16 @@
         width: 100%;
         background-color: #7a3ca1;
         color: #fff;
-        padding: 15px;
+        padding: 14px;
         text-align: center;
-        font-size: 23px;
+        font-size: 18px;
       }
       .container {
         padding: 20px;
         text-align: center;
       }
       .image img {
-        width: 400px;
+        width: 350px;
       }
       .notes {
         display: flex;
@@ -51,8 +51,14 @@
         background-color: #fff;
       }
       .message {
+        margin: 10px 0 0 0;
+        font-size: 0.9em;
+      }
+      .message.error {
         color: #dc3545;
-        margin: 8px 0;
+      }
+      .message.success {
+        color: #28a745;
       }
       button {
         background-color: #7a3ca1;
@@ -96,5 +102,6 @@
       <div class="message" id="message"></div>
     </div>
     <script src="./src/jam_buddy.js"></script>
+    <script src="./src/jam_buddy_dom.js"></script>
   </body>
 </html>
