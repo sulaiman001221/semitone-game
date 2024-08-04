@@ -1,3 +1,5 @@
+import { JamBuddy } from "./jam_buddy.js";
+
 const setupDOM = (document, jamBuddy) => {
   const note1Element = document.getElementById("note1");
   const note2Element = document.getElementById("note2");
@@ -44,11 +46,11 @@ const setupDOM = (document, jamBuddy) => {
   updateCurrentNotesDisplay();
 };
 
-if (typeof window !== "undefined") {
+if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     const jamBuddy = new JamBuddy();
     setupDOM(document, jamBuddy);
   });
 }
 
-module.exports = { setupDOM };
+export { setupDOM };

@@ -100,6 +100,4 @@ class JamBuddy {
   }
 }
 
-typeof window !== "undefined"
-  ? (window.JamBuddy = JamBuddy)
-  : (module.exports = { JamBuddy, errorMessage });
+export { JamBuddy, errorMessage };

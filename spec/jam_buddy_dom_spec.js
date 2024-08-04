@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { JSDOM } = require("jsdom");
-const { JamBuddy, errorMessage } = require("../src/jam_buddy");
-const { setupDOM } = require("../src/jam_buddy_dom");
+import fs from "fs";
+import path from "path";
+import { JSDOM } from "jsdom";
+import { JamBuddy } from "../src/jam_buddy";
+import { setupDOM } from "../src/jam_buddy_dom";
 
 describe("JamBuddy Class with DOM", () => {
   let dom;
