@@ -1,9 +1,11 @@
 {
   "spec_dir": "spec",
-  "spec_files": ["../spec/jam_buddy_spec.js"],
-  "helpers": ["../src/helper_oject.js"],
+  "spec_files": ["*spec.js"],
+  "helpers": ["../src/helpers/babel.js"],
   "env": {
     "stopSpecOnExpectationFailure": false,
     "random": true
-  }
+  },
+  "reporters": [],
+  "requires": ["@babel/register"]
 }
