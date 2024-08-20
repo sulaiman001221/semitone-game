@@ -1,3 +1,4 @@
-require("@babel/register")({
+import babelRegister from "@babel/register";
+babelRegister({
   presets: ["@babel/preset-env"],
 });

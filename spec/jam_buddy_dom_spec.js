@@ -1,8 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { JSDOM } from "jsdom";
-import { JamBuddy } from "../src/jam_buddy";
-import { setupDOM } from "../src/jam_buddy_dom";
+import { JamBuddy } from "../src/jam_buddy.js";
+import { setupDOM } from "../src/jam_buddy_dom.js";
+
+const getDirname = (importMetaUrl) => {
+  return path.dirname(new URL(importMetaUrl).pathname);
+};
 
 describe("JamBuddy Class with DOM", () => {
   let dom;
@@ -10,6 +14,7 @@ describe("JamBuddy Class with DOM", () => {
   let jamBuddy;
 
   beforeEach(() => {
+    const __dirname = getDirname(import.meta.url);
     const html = fs.readFileSync(
       path.resolve(__dirname, "../index.html"),
       "utf8"
@@ -21,7 +26,7 @@ describe("JamBuddy Class with DOM", () => {
     setupDOM(document, jamBuddy);
   });
 
-  describe("DOM Interaction Tests", () => {
+  describe("setupDOM function", () => {
     it("should have the header element", () => {
       const header = document.querySelector(".header");
       expect(header).not.toBeNull();
