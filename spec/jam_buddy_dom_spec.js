@@ -1,12 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { JSDOM } from "jsdom";
-import { JamBuddy } from "../src/jam_buddy.js";
-import { setupDOM } from "../src/jam_buddy_dom.js";
-
-const getDirname = (importMetaUrl) => {
-  return path.dirname(new URL(importMetaUrl).pathname);
-};
+const fs = require("fs");
+const path = require("path");
+const { JSDOM } = require("jsdom");
+const { JamBuddy } = require("../src/jam_buddy.js");
+const { setupDOM } = require("../src/jam_buddy_dom.js");
 
 describe("JamBuddy Class with DOM", () => {
   let dom;
@@ -14,7 +10,6 @@ describe("JamBuddy Class with DOM", () => {
   let jamBuddy;
 
   beforeEach(() => {
-    const __dirname = getDirname(import.meta.url);
     const html = fs.readFileSync(
       path.resolve(__dirname, "../index.html"),
       "utf8"

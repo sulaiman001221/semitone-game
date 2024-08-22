@@ -100,4 +100,4 @@ class JamBuddy {
   }
 }
 
-export { JamBuddy, errorMessage };
+module.exports = { JamBuddy, errorMessage };

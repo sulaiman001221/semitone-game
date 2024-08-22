@@ -1,4 +1,4 @@
-import { JamBuddy } from "./jam_buddy.js";
+const { JamBuddy } = require("./jam_buddy");
 
 const setupDOM = (document, jamBuddy) => {
   const note1Element = document.getElementById("note1");
@@ -23,6 +23,7 @@ const setupDOM = (document, jamBuddy) => {
   document.getElementById("checkAnswerButton").addEventListener("click", () => {
     const answerInput = document.getElementById("answerInput");
     const answer = parseInt(answerInput.value, 10);
+
     if (isNaN(answer)) {
       messageElement.textContent = "Please enter a valid number.";
       messageElement.className = "message error";
@@ -41,7 +42,6 @@ const setupDOM = (document, jamBuddy) => {
       messageElement.className = "message error";
     }
   });
-
   jamBuddy.randomizeCurrentNotes();
   updateCurrentNotesDisplay();
 };
@@ -53,4 +53,4 @@ if (typeof document !== "undefined") {
   });
 }
 
-export { setupDOM };
+module.exports = { setupDOM };

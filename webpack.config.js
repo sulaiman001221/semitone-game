@@ -1,10 +1,10 @@
-import path from "path";
+const path = require("path");
 
-export default {
-  entry: "./src/index.js",
+module.exports = {
+  entry: "./src/jam_buddy_dom.js",
   output: {
+    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
-    path: path.resolve(__dirname),
   },
   module: {
     rules: [
@@ -13,6 +13,9 @@ export default {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
         },
       },
     ],
