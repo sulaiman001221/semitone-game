@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { JSDOM } from "jsdom";
-import { JamBuddy } from "../src/jam_buddy";
-import { setupDOM } from "../src/jam_buddy_dom";
+const fs = require("fs");
+const path = require("path");
+const { JSDOM } = require("jsdom");
+const { JamBuddy } = require("../src/jam_buddy.js");
+const { setupDOM } = require("../src/jam_buddy_dom.js");
 
 describe("JamBuddy Class with DOM", () => {
   let dom;
@@ -21,7 +21,7 @@ describe("JamBuddy Class with DOM", () => {
     setupDOM(document, jamBuddy);
   });
 
-  describe("DOM Interaction Tests", () => {
+  describe("setupDOM function", () => {
     it("should have the header element", () => {
       const header = document.querySelector(".header");
       expect(header).not.toBeNull();
