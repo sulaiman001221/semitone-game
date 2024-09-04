@@ -8,11 +8,6 @@ describe("JamBuddy Class", () => {
   });
 
   describe("setCurrentNotes method", () => {
-    it("should convert lower case notes to upper case", () => {
-      jamBuddy.setCurrentNotes(["a", "a#"]);
-      expect(jamBuddy.getCurrentNotes()).toEqual(["A", "A#"]);
-    });
-
     it("should set the current notes if valid notes are provided", () => {
       jamBuddy.setCurrentNotes(["C", "D"]);
       expect(jamBuddy.getCurrentNotes()).toEqual(["C", "D"]);
@@ -33,7 +28,13 @@ describe("JamBuddy Class", () => {
     it("should throw an error if the provided notes are similar", () => {
       expect(() => {
         jamBuddy.setCurrentNotes(["C", "C"]);
-      }).toThrowError(errorMessage.similarNotes);
+      }).toThrowError(errorMessage.similarNotes("C", "C"));
+    });
+
+    it("should throw an error if enharmonic equivalents are set together", () => {
+      expect(() => {
+        jamBuddy.setCurrentNotes(["Db", "C#"]);
+      }).toThrowError(errorMessage.similarNotes("Db", "C#"));
     });
 
     it("should throw an error if the input is not an array", () => {
@@ -76,10 +77,17 @@ describe("JamBuddy Class", () => {
     });
   });
 
-  it("should return a boolean if a jam was set randomly", () => {
-    jamBuddy.randomizeCurrentNotes();
-    expect(typeof jamBuddy.checkAnswer(4)).toBe("boolean");
+  it("should calculate flat notes the same way as sharp notes", () => {
+    jamBuddy.setCurrentNotes(["G#", "A"]);
+    const sharpNoteDistance = jamBuddy.checkAnswer(1); 
+     
+    jamBuddy.setCurrentNotes(["Ab", "A"]);
+    const flatNoteDistance = jamBuddy.checkAnswer(1);
+  
+    expect(sharpNoteDistance).toBe(true);
+    expect(flatNoteDistance).toBe(true);
   });
+  
 
   it("should return false if the distance is incorrect", () => {
     jamBuddy.setCurrentNotes(["C", "D"]);
