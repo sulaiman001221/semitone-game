@@ -5,8 +5,7 @@ const errorMessage = {
     "Current notes not set, you should set two notes before checking the answer",
   invalidDataType: "All the provided notes should be strings",
   invalidArray: "Notes should be provided as an array",
-  similarNotes: (firstNote, secondNote) =>
-    `${firstNote} and ${secondNote} are similar notes. Similar notes are not allowed`,
+  similarNotes: "Notes should not be similar",
   invalidLength: "You should provide exactly two notes",
 };
 
@@ -18,6 +17,9 @@ function validateNotes(notes, validNotes) {
   }
   if (notes.length !== VALID_NOTE_COUNT) {
     throw new Error(errorMessage.invalidLength);
+  }
+  if (notes[0] === notes[1]) {
+    throw new Error(errorMessage.similarNotes);
   }
   for (let i = 0; i < notes.length; i++) {
     if (typeof notes[i] !== "string") {
@@ -69,9 +71,6 @@ class JamBuddy {
 
   setCurrentNotes(notes) {
     validateNotes(notes, this.notes);
-    if (this.normalizeNote(notes[0]) === this.normalizeNote(notes[1])) {
-      throw new Error(errorMessage.similarNotes(notes[0], notes[1]));
-    }
     this.currentNotes = notes;
   }
 
@@ -82,7 +81,7 @@ class JamBuddy {
   randomizeCurrentNotes() {
     const note1 = getRandomNote(this.notes);
     let note2 = getRandomNote(this.notes);
-    while (this.normalizeNote(note1) === this.normalizeNote(note2)) {
+    while (note1 === note2) {
       note2 = getRandomNote(this.notes);
     }
     this.currentNotes = [note1, note2];
