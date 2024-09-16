@@ -1,6 +1,6 @@
 const errorMessage = {
   invalidNotes:
-    "Invalid notes provided. Notes should be one of A, A#, B, C, C#, D, D#, E, F, F#, G, G#.",
+    "Invalid notes provided. Notes should be one of A, A#, Bb, B, C, C#, Db, D, D#, Eb, E, F, F#, Gb, G, G#, Ab.",
   notesNotSet:
     "Current notes not set, you should set two notes before checking the answer",
   invalidDataType: "All the provided notes should be strings",
@@ -18,6 +18,9 @@ function validateNotes(notes, validNotes) {
   if (notes.length !== VALID_NOTE_COUNT) {
     throw new Error(errorMessage.invalidLength);
   }
+  if (notes[0] === notes[1]) {
+    throw new Error(errorMessage.similarNotes);
+  }
   for (let i = 0; i < notes.length; i++) {
     if (typeof notes[i] !== "string") {
       throw new Error(errorMessage.invalidDataType);
@@ -25,10 +28,6 @@ function validateNotes(notes, validNotes) {
     if (!validNotes.includes(notes[i])) {
       throw new Error(errorMessage.invalidNotes);
     }
-  }
-
-  if (notes[0] === notes[1]) {
-    throw new Error(errorMessage.similarNotes);
   }
 }
 
@@ -41,29 +40,36 @@ class JamBuddy {
     this.notes = [
       "A",
       "A#",
+      "Bb",
       "B",
       "C",
       "C#",
+      "Db",
       "D",
       "D#",
+      "Eb",
       "E",
       "F",
       "F#",
+      "Gb",
       "G",
       "G#",
+      "Ab",
     ];
+    this.enharmonicPairs = {
+      Bb: "A#",
+      Db: "C#",
+      Eb: "D#",
+      Gb: "F#",
+      Ab: "G#",
+    };
     this.currentNotes = [];
+  }
+  normalizeNote(note) {
+    return this.enharmonicPairs[note] || note;
   }
 
   setCurrentNotes(notes) {
-    if (!Array.isArray(notes)) {
-      throw new Error(errorMessage.invalidArray);
-    }
-    for (let i = 0; i < notes.length; i++) {
-      if (typeof notes[i] === "string") {
-        notes[i] = notes[i].toUpperCase();
-      }
-    }
     validateNotes(notes, this.notes);
     this.currentNotes = notes;
   }
@@ -73,7 +79,7 @@ class JamBuddy {
   }
 
   randomizeCurrentNotes() {
-    let note1 = getRandomNote(this.notes);
+    const note1 = getRandomNote(this.notes);
     let note2 = getRandomNote(this.notes);
     while (note1 === note2) {
       note2 = getRandomNote(this.notes);
@@ -85,14 +91,21 @@ class JamBuddy {
     if (this.currentNotes.length !== VALID_NOTE_COUNT) {
       throw new Error(errorMessage.notesNotSet);
     }
-    const indexOfFirstNote = this.notes.indexOf(this.currentNotes[0]);
-    const noteCircle = [...this.notes.slice(indexOfFirstNote), ...this.notes];
+    const normalizedNotes = this.notes.filter((note) => !note.includes("b"));
+    const firstNote = this.normalizeNote(this.currentNotes[0]);
+    const secondNote = this.normalizeNote(this.currentNotes[1]);
 
-    const currentIndex = noteCircle.indexOf(this.currentNotes[0]);
-    const targetIndex = noteCircle.indexOf(this.currentNotes[1]);
+    const indexOfFirstNote = normalizedNotes.indexOf(firstNote);
+    const noteCircle = [
+      ...normalizedNotes.slice(indexOfFirstNote),
+      ...normalizedNotes,
+    ];
+
+    const currentIndex = noteCircle.indexOf(firstNote);
+    const targetIndex = noteCircle.indexOf(secondNote);
 
     const clockwiseDistance = targetIndex - currentIndex;
-    const counterClockwiseDistance = this.notes.length - targetIndex;
+    const counterClockwiseDistance = normalizedNotes.length - targetIndex;
 
     return (
       distance === clockwiseDistance || distance === counterClockwiseDistance

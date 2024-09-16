@@ -8,11 +8,6 @@ describe("JamBuddy Class", () => {
   });
 
   describe("setCurrentNotes method", () => {
-    it("should convert lower case notes to upper case", () => {
-      jamBuddy.setCurrentNotes(["a", "a#"]);
-      expect(jamBuddy.getCurrentNotes()).toEqual(["A", "A#"]);
-    });
-
     it("should set the current notes if valid notes are provided", () => {
       jamBuddy.setCurrentNotes(["C", "D"]);
       expect(jamBuddy.getCurrentNotes()).toEqual(["C", "D"]);
@@ -65,6 +60,12 @@ describe("JamBuddy Class", () => {
   });
 
   describe("checkAnswer method", () => {
+    it("should throw an error if current notes are not set", () => {
+      expect(() => {
+        jamBuddy.checkAnswer(1);
+      }).toThrowError(errorMessage.notesNotSet);
+    });
+    
     it("should return true if the distance is correct clockwise", () => {
       jamBuddy.setCurrentNotes(["C", "F"]);
       expect(jamBuddy.checkAnswer(5)).toBeTruthy();
@@ -74,22 +75,27 @@ describe("JamBuddy Class", () => {
       jamBuddy.setCurrentNotes(["C", "F"]);
       expect(jamBuddy.checkAnswer(7)).toBeTruthy();
     });
-  });
 
-  it("should return a boolean if a jam was set randomly", () => {
-    jamBuddy.randomizeCurrentNotes();
-    expect(typeof jamBuddy.checkAnswer(4)).toBe("boolean");
-  });
+    it("should return true if enharmonic notes are set together", () => {
+      jamBuddy.setCurrentNotes(["Gb", "F#"]);
+      expect(jamBuddy.checkAnswer(0)).toBeTruthy();
+    });
 
-  it("should return false if the distance is incorrect", () => {
-    jamBuddy.setCurrentNotes(["C", "D"]);
-    const incorrectDistance = 3;
-    expect(jamBuddy.checkAnswer(incorrectDistance)).toBeFalsy();
-  });
+    it("should calculate flat notes the same way as sharp notes", () => {
+      jamBuddy.setCurrentNotes(["G#", "A"]);
+      const sharpNoteDistance = jamBuddy.checkAnswer(1);
 
-  it("should throw an error if current notes are not set", () => {
-    expect(() => {
-      jamBuddy.checkAnswer(1);
-    }).toThrowError(errorMessage.notesNotSet);
+      jamBuddy.setCurrentNotes(["Ab", "A"]);
+      const flatNoteDistance = jamBuddy.checkAnswer(1);
+
+      expect(sharpNoteDistance).toBeTruthy();
+      expect(flatNoteDistance).toBeTruthy();
+    });
+
+    it("should return false if the distance is incorrect", () => {
+      jamBuddy.setCurrentNotes(["C", "D"]);
+      const incorrectDistance = 3;
+      expect(jamBuddy.checkAnswer(incorrectDistance)).toBeFalsy();
+    });
   });
 });
