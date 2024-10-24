@@ -9,13 +9,27 @@ body {
 }
 
 .header {
-  font-family: "Dancing Script", cursive;
   width: 100%;
   background-color: #7a3ca1;
   color: #fff;
   padding: 14px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.title {
+  font-family: "Dancing Script", cursive;
   font-size: 22px;
+  margin: 0 auto;
+}
+
+.streak {
+  position: absolute;
+  right: 100px;
+  font-family: "Concert One", "Coda", san-serif, cursive;
+  font-size: 18px;
 }
 
 .container {
@@ -43,6 +57,10 @@ body {
   font-size: 1.2em;
   margin: 0 10px;
   background-color: #fff;
+}
+
+.shade-notes {
+  background-color: #e6d5f3;
 }
 
 .message {
