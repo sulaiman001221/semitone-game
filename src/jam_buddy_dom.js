@@ -112,6 +112,18 @@ const createNoteElement = (document, allNotesElement, note) => {
   return inputElement;
 };
 
+const isFlatNote = (note) => {
+  return /^[A-Z][a-z]$/.test(note);
+};
+
+const isSharpNote = (note) => {
+  return /^[A-Z]\#$/.test(note);
+};
+
+const generateNotesBasedOnCurrentNotes = (jamBuddy) => {
+  const [note1, note2] = jamBuddy.getCurrentNotes();
+};
+
 if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     const jamBuddy = new JamBuddy();
