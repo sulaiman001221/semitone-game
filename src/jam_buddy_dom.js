@@ -1,5 +1,7 @@
 const { JamBuddy } = require("./jam_buddy");
 
+let streak = 0; // Track the user's correct answer streak
+
 const setupDOM = (document, jamBuddy) => {
   const note1Element = document.getElementById("note1");
   const note2Element = document.getElementById("note2");
@@ -7,17 +9,22 @@ const setupDOM = (document, jamBuddy) => {
   const answerInput = document.getElementById("answerInput");
   const randomizeNotesButton = document.getElementById("randomizeNotesButton");
   const checkAnswerButton = document.getElementById("checkAnswerButton");
+  const quitButton = document.getElementById("quitButton");
   const allNotesElement = document.querySelector(".allNotes");
+  const streakElement = document.getElementById("streak");
+
+  jamBuddy.randomizeCurrentNotes();
+  updateCurrentNotesDisplay(jamBuddy, note1Element, note2Element);
 
   randomizeNotesButton.addEventListener("click", () =>
     handleRandomizeClick(jamBuddy, note1Element, note2Element, messageElement)
   );
   checkAnswerButton.addEventListener("click", () =>
-    handleCheckAnswerClick(jamBuddy, answerInput, messageElement)
+    handleCheckAnswerClick(jamBuddy, answerInput, messageElement, streakElement, allNotesElement)
   );
-  generateAllNotes(document, jamBuddy, allNotesElement);
-  jamBuddy.randomizeCurrentNotes();
-  updateCurrentNotesDisplay(jamBuddy, note1Element, note2Element);
+  quitButton.addEventListener("click", () =>
+    generateAllNotes(document, jamBuddy, allNotesElement)
+  );
 };
 
 const updateCurrentNotesDisplay = (jamBuddy, note1Element, note2Element) => {
@@ -36,6 +43,10 @@ const displayMessage = (messageElement, message, isSuccess) => {
   messageElement.className = isSuccess ? "message success" : "message error";
 };
 
+const updateStreakDisplay = (streakElement) => {
+  streakElement.textContent = `Streak: ${streak}`;
+};
+
 const handleRandomizeClick = (
   jamBuddy,
   note1Element,
@@ -45,9 +56,11 @@ const handleRandomizeClick = (
   jamBuddy.randomizeCurrentNotes();
   updateCurrentNotesDisplay(jamBuddy, note1Element, note2Element);
   resetMessage(messageElement);
+  streak = 0; // Reset streak when randomizing notes
+  updateStreakDisplay(streakElement);
 };
 
-const handleCheckAnswerClick = (jamBuddy, answerInput, messageElement) => {
+const handleCheckAnswerClick = (jamBuddy, answerInput, messageElement, streakElement, allNotesElement) => {
   const answer = parseInt(answerInput.value, 10);
 
   if (isNaN(answer)) {
@@ -56,72 +69,68 @@ const handleCheckAnswerClick = (jamBuddy, answerInput, messageElement) => {
   }
   try {
     const isCorrect = jamBuddy.checkAnswer(answer);
-    displayMessage(
-      messageElement,
-      isCorrect ? "Correct! Well done!" : "Incorrect. Try again.",
-      isCorrect
-    );
+    if (isCorrect) {
+      streak += 1; // Increment streak for correct answer
+      displayMessage(messageElement, "Correct! Well done!", true);
+      generateAllNotes(document, jamBuddy, allNotesElement); // Highlight the notes in the explanation
+    } else {
+      streak = 0; // Reset streak for incorrect answer
+      displayMessage(messageElement, "Incorrect. Try again.", false);
+    }
+    updateStreakDisplay(streakElement); // Update the streak display
   } catch (error) {
     displayMessage(messageElement, error.message, false);
   }
 };
 
-const filterNotes = (notes, preferredType = "sharp") => {
-  const enharmonicPairs = {
-    "A#": "Bb",
-    "C#": "Db",
-    "D#": "Eb",
-    "F#": "Gb",
-    "G#": "Ab",
-  };
+const generateAllNotes = (document, jamBuddy, allNotesElement) => {
+  const notes = [
+    "A",
+    "A#|Bb",
+    "B",
+    "C",
+    "C#|Db",
+    "D",
+    "D#|Eb",
+    "E",
+    "F",
+    "F#|Gb",
+    "G",
+    "G#|Ab",
+  ];
 
-  return notes.map((note) => {
-    if (preferredType === "sharp" && enharmonicPairs[note]) {
-      return note;
-    } else if (preferredType === "flat" && enharmonicPairs[note]) {
-      return enharmonicPairs[note];
+  allNotesElement.innerHTML = ""; // Clear previous notes
+  notes.forEach((note) => {
+    createNoteElement(document, jamBuddy, allNotesElement, note);
+  });
+};
+
+const highlightNote = (jamBuddy, element, currentNote) => {
+  const [note1, note2] = jamBuddy.getCurrentNotes();
+  if (currentNote.length > 2) {
+    const [sharpNote, flatNote] = currentNote.split("|");
+    if (
+      note1 === sharpNote ||
+      note2 === sharpNote ||
+      note1 === flatNote ||
+      note2 === flatNote
+    ) {
+      element.classList.add("shade-note");
     }
-    return note;
-  });
+  } else if (note1 === currentNote || note2 === currentNote) {
+    element.classList.add("shade-note");
+  }
 };
 
-const generateAllNotes = (
-  document,
-  jamBuddy,
-  allNotesElement,
-  preferredType = "sharp"
-) => {
-  const flatNotes = ["Bb", "Db", "Eb", "Gb", "Ab"];
-  const commonNotes = jamBuddy.notes.filter(
-    (note) => !flatNotes.includes(note)
-  );
-  const filteredNotes = filterNotes(commonNotes, preferredType);
-  filteredNotes.forEach((note) => {
-    createNoteElement(document, allNotesElement, note);
-  });
-};
-
-const createNoteElement = (document, allNotesElement, note) => {
+const createNoteElement = (document, jamBuddy, allNotesElement, note) => {
   const inputElement = document.createElement("input");
   inputElement.type = "text";
   inputElement.value = note;
   inputElement.className = "note-input";
   inputElement.readOnly = true;
 
+  highlightNote(jamBuddy, inputElement, note);
   allNotesElement.appendChild(inputElement);
-  return inputElement;
-};
-
-const isFlatNote = (note) => {
-  return /^[A-Z][a-z]$/.test(note);
-};
-
-const isSharpNote = (note) => {
-  return /^[A-Z]\#$/.test(note);
-};
-
-const generateNotesBasedOnCurrentNotes = (jamBuddy) => {
-  const [note1, note2] = jamBuddy.getCurrentNotes();
 };
 
 if (typeof document !== "undefined") {

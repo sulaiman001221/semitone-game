@@ -25,7 +25,7 @@ body {
   margin: 0 auto;
 }
 
-.streak {
+#streak {
   position: absolute;
   right: 100px;
   font-family: "Concert One", "Coda", san-serif, cursive;
@@ -49,8 +49,8 @@ body {
 }
 
 .note-input {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 2px solid #7a3ca1;
   text-align: center;
@@ -59,7 +59,7 @@ body {
   background-color: #fff;
 }
 
-.shade-notes {
+.shade-note {
   background-color: #e6d5f3;
 }
 
