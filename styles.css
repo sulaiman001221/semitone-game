@@ -1,5 +1,5 @@
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Concert One", "Coda", san-serif, cursive;
   background-color: #fdf6e2;
   margin: 0;
   padding: 0;
@@ -8,7 +8,7 @@ body {
   align-items: center;
 }
 
-.header {
+#header {
   width: 100%;
   background-color: #7a3ca1;
   color: #fff;
@@ -19,7 +19,7 @@ body {
   position: relative;
 }
 
-.title {
+#title {
   font-family: "Dancing Script", cursive;
   font-size: 22px;
   margin: 0 auto;
@@ -28,27 +28,26 @@ body {
 #streak {
   position: absolute;
   right: 100px;
-  font-family: "Concert One", "Coda", san-serif, cursive;
-  font-size: 18px;
+  font-size: 17px;
 }
 
-.container {
+#container {
   padding: 20px;
   text-align: center;
 }
 
-.image img {
-  width: 350px;
+#image img {
+  width: 320px;
 }
 
-.notes {
+#notes {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px 0;
 }
 
-.note-input {
+.noteInput {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -59,13 +58,13 @@ body {
   background-color: #fff;
 }
 
-.shade-note {
+.shadeNote {
   background-color: #e6d5f3;
 }
 
 .message {
   margin: 10px 0 0 0;
-  font-size: 0.9em;
+  font-size: 17px;
 }
 
 .message.error {
@@ -78,12 +77,12 @@ body {
 
 button {
   background-color: #7a3ca1;
+  font-family: "Concert One", "Coda", san-serif, cursive;
   color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-family: "Concert One", "Coda", san-serif, cursive;
   font-size: 1em;
 }
 

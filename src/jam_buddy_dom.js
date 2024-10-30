@@ -1,36 +1,52 @@
 const { JamBuddy } = require("./jam_buddy");
 
-let streak = 0; // Track the user's correct answer streak
+let streak = 0;
+
+const messages = {
+  enterNumber: "Please enter a valid number.",
+  correctAnswer: "Correct! Well done!",
+  incorrectAnswer: "Incorrect. Try again.",
+  singleAnswer: (answer) => `Correct answer is ${answer}`,
+  doubleAnswer: (answer1, answer2) =>
+    `Correct answers clockwise and counter are ${answer1} & ${answer2}`,
+};
 
 const setupDOM = (document, jamBuddy) => {
-  const note1Element = document.getElementById("note1");
-  const note2Element = document.getElementById("note2");
-  const messageElement = document.getElementById("message");
-  const answerInput = document.getElementById("answerInput");
-  const randomizeNotesButton = document.getElementById("randomizeNotesButton");
-  const checkAnswerButton = document.getElementById("checkAnswerButton");
-  const quitButton = document.getElementById("quitButton");
-  const allNotesElement = document.querySelector(".allNotes");
-  const streakElement = document.getElementById("streak");
+  const elements = {
+    note1: document.getElementById("note1"),
+    note2: document.getElementById("note2"),
+    message: document.getElementById("message"),
+    answerInput: document.getElementById("answerInput"),
+    randomizeButton: document.getElementById("randomizeNotesButton"),
+    checkAnswerButton: document.getElementById("checkAnswerButton"),
+    quitButton: document.getElementById("quitButton"),
+    allNotes: document.getElementById("allNotes"),
+    streakDisplay: document.getElementById("streak"),
+    restartButton: document.getElementById("restartButton"),
+  };
 
   jamBuddy.randomizeCurrentNotes();
-  updateCurrentNotesDisplay(jamBuddy, note1Element, note2Element);
+  updateCurrentNotesDisplay(jamBuddy, elements.note1, elements.note2);
+  updateStreakDisplay(elements.streakDisplay);
 
-  randomizeNotesButton.addEventListener("click", () =>
-    handleRandomizeClick(jamBuddy, note1Element, note2Element, messageElement)
+  elements.randomizeButton.addEventListener("click", () =>
+    handleRandomizeClick(jamBuddy, elements)
   );
-  checkAnswerButton.addEventListener("click", () =>
-    handleCheckAnswerClick(jamBuddy, answerInput, messageElement, streakElement, allNotesElement)
+  elements.checkAnswerButton.addEventListener("click", () =>
+    handleCheckAnswerClick(document, jamBuddy, elements)
   );
-  quitButton.addEventListener("click", () =>
-    generateAllNotes(document, jamBuddy, allNotesElement)
+  elements.quitButton.addEventListener("click", () =>
+    handleQuitClick(document, jamBuddy, elements)
+  );
+  elements.restartButton.addEventListener("click", () =>
+    handleRestartClick(jamBuddy, elements)
   );
 };
 
-const updateCurrentNotesDisplay = (jamBuddy, note1Element, note2Element) => {
+const updateCurrentNotesDisplay = (jamBuddy, note1, note2) => {
   const notes = jamBuddy.getCurrentNotes();
-  note1Element.value = notes[0] || "";
-  note2Element.value = notes[1] || "";
+  note1.value = notes[0] || "";
+  note2.value = notes[1] || "";
 };
 
 const resetMessage = (messageElement) => {
@@ -47,40 +63,66 @@ const updateStreakDisplay = (streakElement) => {
   streakElement.textContent = `Streak: ${streak}`;
 };
 
-const handleRandomizeClick = (
-  jamBuddy,
-  note1Element,
-  note2Element,
-  messageElement
-) => {
+const handleRandomizeClick = (jamBuddy, elements) => {
   jamBuddy.randomizeCurrentNotes();
-  updateCurrentNotesDisplay(jamBuddy, note1Element, note2Element);
-  resetMessage(messageElement);
-  streak = 0; // Reset streak when randomizing notes
-  updateStreakDisplay(streakElement);
+  updateCurrentNotesDisplay(jamBuddy, elements.note1, elements.note2);
+  resetMessage(elements.message);
+  enableButton(elements.checkAnswerButton);
+  enableButton(elements.quitButton);
+  elements.answerInput.disabled = false;
+  elements.answerInput.value = "";
+  elements.allNotes.innerHTML = "";
 };
 
-const handleCheckAnswerClick = (jamBuddy, answerInput, messageElement, streakElement, allNotesElement) => {
-  const answer = parseInt(answerInput.value, 10);
+const handleCheckAnswerClick = (document, jamBuddy, elements) => {
+  const answer = parseInt(elements.answerInput.value, 10);
 
   if (isNaN(answer)) {
-    displayMessage(messageElement, "Please enter a valid number.", false);
+    displayMessage(elements.message, messages.enterNumber, false);
     return;
   }
   try {
     const isCorrect = jamBuddy.checkAnswer(answer);
     if (isCorrect) {
-      streak += 1; // Increment streak for correct answer
-      displayMessage(messageElement, "Correct! Well done!", true);
-      generateAllNotes(document, jamBuddy, allNotesElement); // Highlight the notes in the explanation
+      streak++;
+      displayMessage(elements.message, messages.correctAnswer, true);
+      generateAllNotes(document, jamBuddy, elements.allNotes);
+      disableButton(elements.checkAnswerButton);
+      disableButton(elements.quitButton);
+      elements.answerInput.disabled = true;
     } else {
-      streak = 0; // Reset streak for incorrect answer
-      displayMessage(messageElement, "Incorrect. Try again.", false);
+      streak = 0;
+      displayMessage(elements.message, messages.incorrectAnswer, false);
     }
-    updateStreakDisplay(streakElement); // Update the streak display
+    updateStreakDisplay(elements.streakDisplay);
   } catch (error) {
-    displayMessage(messageElement, error.message, false);
+    displayMessage(elements.message, error.message, false);
   }
+};
+
+const handleQuitClick = (document, jamBuddy, elements) => {
+  streak = 0;
+  updateStreakDisplay(elements.streakDisplay);
+  generateAllNotes(document, jamBuddy, elements.allNotes);
+  elements.quitButton.hidden = true;
+  elements.restartButton.hidden = false;
+  disableButton(elements.checkAnswerButton);
+  disableButton(elements.randomizeButton);
+  elements.answerInput.disabled = true;
+  displayCorrectAnswers(jamBuddy, elements.message);
+};
+
+const handleRestartClick = (jamBuddy, elements) => {
+  elements.allNotes.innerHTML = "";
+  jamBuddy.randomizeCurrentNotes();
+  updateCurrentNotesDisplay(jamBuddy, elements.note1, elements.note2);
+  elements.restartButton.hidden = true;
+  elements.quitButton.hidden = false;
+  enableButton(elements.checkAnswerButton);
+  enableButton(elements.randomizeButton);
+  elements.answerInput.disabled = false;
+  elements.answerInput.value = "";
+  resetMessage(elements.message);
 };
 
 const generateAllNotes = (document, jamBuddy, allNotesElement) => {
@@ -99,7 +141,7 @@ const generateAllNotes = (document, jamBuddy, allNotesElement) => {
     "G#|Ab",
   ];
 
-  allNotesElement.innerHTML = ""; // Clear previous notes
+  allNotesElement.innerHTML = "";
   notes.forEach((note) => {
     createNoteElement(document, jamBuddy, allNotesElement, note);
   });
@@ -115,22 +157,58 @@ const highlightNote = (jamBuddy, element, currentNote) => {
       note1 === flatNote ||
       note2 === flatNote
     ) {
-      element.classList.add("shade-note");
+      element.classList.add("shadeNote");
     }
   } else if (note1 === currentNote || note2 === currentNote) {
-    element.classList.add("shade-note");
+    element.classList.add("shadeNote");
   }
 };
 
-const createNoteElement = (document, jamBuddy, allNotesElement, note) => {
+const createNoteElement = (document, jamBuddy, allNotes, note) => {
   const inputElement = document.createElement("input");
   inputElement.type = "text";
   inputElement.value = note;
-  inputElement.className = "note-input";
+  inputElement.className = "noteInput";
   inputElement.readOnly = true;
 
   highlightNote(jamBuddy, inputElement, note);
-  allNotesElement.appendChild(inputElement);
+  allNotes.appendChild(inputElement);
+};
+
+const disableButton = (button) => {
+  button.disabled = true;
+  button.style.backgroundColor = "#b08bc3";
+  button.style.cursor = "not-allowed";
+  button.style.opacity = "0.6";
+};
+
+const enableButton = (button) => {
+  button.disabled = false;
+  button.style.backgroundColor = "";
+  button.style.cursor = "";
+  button.style.opacity = "";
+};
+
+const displayCorrectAnswers = (jamBuddy, message) => {
+  const correctAnswers = [];
+
+  let answer = 0;
+  while (correctAnswers.length < 2) {
+    const isCorrect = jamBuddy.checkAnswer(answer);
+    if (isCorrect) correctAnswers.push(answer);
+    if (correctAnswers[0] === 0) break;
+    answer++;
+  }
+
+  if (correctAnswers.length === 1) {
+    displayMessage(message, messages.singleAnswer(correctAnswers[0]), true);
+  } else {
+    displayMessage(
+      message,
+      messages.doubleAnswer(correctAnswers[0], correctAnswers[1]),
+      true
+    );
+  }
 };
 
 if (typeof document !== "undefined") {
@@ -140,4 +218,4 @@ if (typeof document !== "undefined") {
   });
 }
 
-module.exports = { setupDOM };
+module.exports = { setupDOM, messages };
