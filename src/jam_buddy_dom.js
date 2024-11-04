@@ -16,6 +16,7 @@ const setupDOM = (document, jamBuddy) => {
     note1: document.getElementById("note1"),
     note2: document.getElementById("note2"),
     message: document.getElementById("message"),
+    congratsMessage: document.getElementById("congratsMessage"),
     answerInput: document.getElementById("answerInput"),
     randomizeButton: document.getElementById("randomizeNotesButton"),
     checkAnswerButton: document.getElementById("checkAnswerButton"),
@@ -85,6 +86,7 @@ const handleCheckAnswerClick = (document, jamBuddy, elements) => {
     const isCorrect = jamBuddy.checkAnswer(answer);
     if (isCorrect) {
       streak++;
+      displayCorrectAnswers(jamBuddy, elements.congratsMessage);
       displayMessage(elements.message, messages.correctAnswer, true);
       generateAllNotes(document, jamBuddy, elements.allNotes);
       disableButton(elements.checkAnswerButton);

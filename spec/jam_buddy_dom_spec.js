@@ -63,12 +63,16 @@ describe("JamBuddy Class with DOM", () => {
       expect(getElement("note2").value).toBe(notes[1]);
     });
 
-    it("should show success message and update streak with correct answer", () => {
+    it("should show success message along with explanations and update streak with correct answer", () => {
       jamBuddy.setCurrentNotes(["C", "F"]);
       setInputValue("answerInput", "5");
       clickElement("checkAnswerButton");
       expect(getElement("message").textContent).toBe(messages.correctAnswer);
       expect(getElement("message").className).toBe("message success");
+      expect(getElement("congratsMessage").textContent).toContain(
+        messages.doubleAnswer("5", "7")
+      );
+      expect(getElement("congratsMessage").className).toBe("message success");
       expect(getElement("streak").textContent).toContain("Streak: 1");
 
       const allNotes = Array.from(
@@ -77,7 +81,7 @@ describe("JamBuddy Class with DOM", () => {
       const highlightedNotes = allNotes.filter((note) =>
         note.classList.contains("shadeNote")
       );
-      expect(highlightedNotes.length).toBeGreaterThan(0); 
+      expect(highlightedNotes.length).toBeGreaterThan(0);
     });
 
     it("should show error message and reset streak with incorrect answer", () => {
@@ -103,12 +107,12 @@ describe("JamBuddy Class with DOM", () => {
       const allNotes = Array.from(
         getElement("allNotes").querySelectorAll(".noteInput")
       );
-      expect(allNotes.length).toBe(12); 
+      expect(allNotes.length).toBe(12);
 
       const highlightedNotes = allNotes.filter((note) =>
         note.classList.contains("shadeNote")
       );
-      expect(highlightedNotes.length).toBe(2); 
+      expect(highlightedNotes.length).toBe(2);
 
       expect(getElement("message").textContent).toContain(
         messages.doubleAnswer("5", "7")
