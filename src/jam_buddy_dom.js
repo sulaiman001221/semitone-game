@@ -6,6 +6,7 @@ const messages = {
   enterNumber: "Please enter a valid number.",
   correctAnswer: "Correct! Well done!",
   incorrectAnswer: "Incorrect. Try again.",
+  incorrectRange: "Answer should be between 0 & 11",
   singleAnswer: (answer) => `Correct answer is ${answer}`,
   doubleAnswer: (answer1, answer2) =>
     `Correct answers clockwise and counter are ${answer1} & ${answer2}`,
@@ -16,7 +17,7 @@ const setupDOM = (document, jamBuddy) => {
     note1: document.getElementById("note1"),
     note2: document.getElementById("note2"),
     message: document.getElementById("message"),
-    congratsMessage: document.getElementById("congratsMessage"),
+    secondMessage: document.getElementById("secondMessage"),
     answerInput: document.getElementById("answerInput"),
     randomizeButton: document.getElementById("randomizeNotesButton"),
     checkAnswerButton: document.getElementById("checkAnswerButton"),
@@ -68,6 +69,7 @@ const handleRandomizeClick = (jamBuddy, elements) => {
   jamBuddy.randomizeCurrentNotes();
   updateCurrentNotesDisplay(jamBuddy, elements.note1, elements.note2);
   resetMessage(elements.message);
+  resetMessage(elements.secondMessage);
   enableButton(elements.checkAnswerButton);
   enableButton(elements.quitButton);
   elements.answerInput.disabled = false;
@@ -78,15 +80,12 @@ const handleRandomizeClick = (jamBuddy, elements) => {
 const handleCheckAnswerClick = (document, jamBuddy, elements) => {
   const answer = parseInt(elements.answerInput.value, 10);
 
-  if (isNaN(answer)) {
-    displayMessage(elements.message, messages.enterNumber, false);
-    return;
-  }
   try {
+    validateAnswer(elements, answer);
     const isCorrect = jamBuddy.checkAnswer(answer);
     if (isCorrect) {
       streak++;
-      displayCorrectAnswers(jamBuddy, elements.congratsMessage);
+      displayCorrectAnswers(jamBuddy, elements.secondMessage);
       displayMessage(elements.message, messages.correctAnswer, true);
       generateAllNotes(document, jamBuddy, elements.allNotes);
       disableButton(elements.checkAnswerButton);
@@ -125,6 +124,15 @@ const handleRestartClick = (jamBuddy, elements) => {
   elements.answerInput.disabled = false;
   elements.answerInput.value = "";
   resetMessage(elements.message);
+};
+
+const validateAnswer = (elements, answer) => {
+  if (elements.answerInput.value < 0 || elements.answerInput.value > 11) {
+    throw new Error(messages.incorrectRange);
+  }
+  if (isNaN(answer)) {
+    throw new Error(messages.enterNumber);
+  }
 };
 
 const generateAllNotes = (document, jamBuddy, allNotesElement) => {

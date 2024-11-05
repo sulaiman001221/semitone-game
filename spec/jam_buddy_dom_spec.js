@@ -69,10 +69,10 @@ describe("JamBuddy Class with DOM", () => {
       clickElement("checkAnswerButton");
       expect(getElement("message").textContent).toBe(messages.correctAnswer);
       expect(getElement("message").className).toBe("message success");
-      expect(getElement("congratsMessage").textContent).toContain(
+      expect(getElement("secondMessage").textContent).toContain(
         messages.doubleAnswer("5", "7")
       );
-      expect(getElement("congratsMessage").className).toBe("message success");
+      expect(getElement("secondMessage").className).toBe("message success");
       expect(getElement("streak").textContent).toContain("Streak: 1");
 
       const allNotes = Array.from(
@@ -97,6 +97,13 @@ describe("JamBuddy Class with DOM", () => {
       setInputValue("answerInput", "abc");
       clickElement("checkAnswerButton");
       expect(getElement("message").textContent).toBe(messages.enterNumber);
+      expect(getElement("message").className).toBe("message error");
+    });
+
+    it("should validate out of range input and show error", () => {
+      setInputValue("answerInput", "20");
+      clickElement("checkAnswerButton");
+      expect(getElement("message").textContent).toBe(messages.incorrectRange);
       expect(getElement("message").className).toBe("message error");
     });
 

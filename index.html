@@ -27,14 +27,20 @@
         <button id="randomizeNotesButton">Randomize Notes</button>
       </div>
       <div>
-        <input type="number" id="answerInput" placeholder="Enter distance" />
+        <input
+          type="number"
+          id="answerInput"
+          min="0"
+          max="11"
+          placeholder="Enter distance"
+        />
         <button id="checkAnswerButton">Check Answer</button>
         <button id="quitButton">Quit</button>
         <button id="restartButton" hidden>Restart</button>
       </div>
       <div>
         <div class="message" id="message"></div>
-        <div class="message" id="congratsMessage"></div>
+        <div class="message" id="secondMessage"></div>
       </div>
     </div>
     <script src="dist/bundle.js"></script>
