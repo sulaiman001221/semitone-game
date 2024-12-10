@@ -1,4 +1,4 @@
-const { JamBuddy } = require("./jam_buddy");
+import { JamBuddy } from "./jam_buddy.js";
 
 let streak = 0;
 
@@ -228,4 +228,4 @@ if (typeof document !== "undefined") {
   });
 }
 
-module.exports = { setupDOM, messages };
+export { setupDOM, messages };

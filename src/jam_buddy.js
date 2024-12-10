@@ -113,4 +113,4 @@ class JamBuddy {
   }
 }
 
-module.exports = { JamBuddy, errorMessage };
+export { JamBuddy, errorMessage };

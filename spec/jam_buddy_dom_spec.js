@@ -1,8 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-const { JSDOM } = require("jsdom");
-const { JamBuddy } = require("../src/jam_buddy.js");
-const { setupDOM, messages } = require("../src/jam_buddy_dom.js");
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import fs from "fs";
+import path from "path";
+import { JSDOM } from "jsdom";
+import { JamBuddy } from "../src/jam_buddy.js";
+import { setupDOM, messages } from "../src/jam_buddy_dom.js";
 
 describe("JamBuddy Class with DOM", () => {
   let dom;
